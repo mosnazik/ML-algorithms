@@ -5,7 +5,7 @@ from sklearn.linear_model import Ridge
 from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import ShuffleSplit
-from sklearn import datasets
+from sklearn.preprocessing import PolynomialFeatures
 
 # Данные сборки
 import csv
@@ -21,6 +21,10 @@ lr = linear_model.LinearRegression()
 lr.fit(X, y)
 clf = Ridge(alpha=10000.0)
 clf.fit(X, y)
+poly_reg = PolynomialFeatures(degree=2)
+X_poly=poly_reg.fit_transform(X)
+lin_reg2 = linear_model.LinearRegression()
+lin_reg2.fit(X_poly,y)
 # Predict data of estimated models
 line_y = lr.predict(X)
 line_z = clf.predict(X)
@@ -30,6 +34,7 @@ plt.scatter(
 )
 plt.plot(X, line_y, color="navy", linewidth=lw, label="Linear regressor")
 plt.plot(X, line_z, color="green", linewidth=lw, label="Ridge regressor")
+plt.plot(X, lin_reg2.predict(poly_reg.fit_transform(X)),color='blue')
 plt.show()
 print("R^2 = ",lr.score(X,y))
 cv = ShuffleSplit(n_splits=10, test_size=0.3, random_state=0)
